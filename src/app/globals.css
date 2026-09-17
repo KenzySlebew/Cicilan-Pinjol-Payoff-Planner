@@ -1,0 +1,285 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Fresh, luminous light theme - clean warm white with emerald accent */
+    --background: 140 18% 98%; /* #f8faf9 soft fresh pearl */
+    --foreground: 222 47% 11%; /* #0f172a deep slate */
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 158 64% 40%; /* #10b981 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 20% 94%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 20% 93%;
+    --muted-foreground: 218 16% 40%; /* WCAG AA readable > 4.5:1 */
+
+    --accent: 158 64% 94%;
+    --accent-foreground: 158 64% 24%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 24% 88%;
+    --input: 214 24% 88%;
+    --ring: 158 64% 40%;
+
+    --radius: 1rem;
+
+    --surface-subtle: rgba(0, 0, 0, 0.04);
+    --surface-card: rgba(255, 255, 255, 0.88);
+    --surface-glass: rgba(255, 255, 255, 0.82);
+    --surface-border: rgba(0, 0, 0, 0.08);
+  }
+
+  .dark {
+    /* Digital Rain Base: #100e0b atmospheric dark backdrop */
+    --background: 34 19% 5.3%; /* #100e0b */
+    --foreground: 210 25% 98%; /* Clean Crisp Text */
+
+    --card: 224 22% 10%; /* #121620 Elevated Surface */
+    --card-foreground: 210 25% 98%;
+
+    --popover: 224 22% 10%;
+    --popover-foreground: 210 25% 98%;
+
+    --primary: 158 64% 45%; /* #10b981 Emerald 500 */
+    --primary-foreground: 34 19% 5.3%;
+
+    --secondary: 224 16% 15%;
+    --secondary-foreground: 210 20% 98%;
+
+    /* WCAG AA compliant muted text: >4.5:1 against dark background */
+    --muted: 224 16% 15%;
+    --muted-foreground: 215 20% 74%; /* #a2b2c8 - Bright, highly readable */
+
+    --accent: 158 64% 15%;
+    --accent-foreground: 158 64% 78%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 224 16% 18%;
+    --input: 224 16% 18%;
+    --ring: 158 64% 45%;
+
+    --surface-subtle: rgba(255, 255, 255, 0.05);
+    --surface-card: rgba(18, 20, 26, 0.84);
+    --surface-glass: rgba(16, 17, 22, 0.78);
+    --surface-border: rgba(255, 255, 255, 0.08);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-pelunas-500/25 selection:text-pelunas-200 transition-colors duration-300;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Typography scale inspired by thebudgeting.app */
+  h1, h2, h3, .heading-display {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  /* Tabular numbers for stable financial amounts */
+  .tabular-nums, .finance-amount {
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  /* Accessible focus indicators */
+  :focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+}
+
+/* Apple Material & thebudgeting.app depth utilities */
+.apple-glass {
+  background: var(--surface-glass);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1px solid var(--surface-border);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.7);
+  transition: background 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+}
+
+.dark .apple-glass {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+.apple-card {
+  background: var(--surface-card);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--surface-border);
+  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03), inset 0 1px 0 0 rgba(255, 255, 255, 0.85);
+  transition: background 300ms ease, border-color 300ms ease, box-shadow 300ms ease, transform 150ms ease;
+}
+
+.dark .apple-card {
+  box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Tactile press response */
+.apple-pressable {
+  transition: transform 120ms cubic-bezier(0.2, 0, 0, 1), opacity 120ms ease, background-color 150ms ease;
+  will-change: transform;
+}
+
+.apple-pressable:active {
+  transform: scale(0.975);
+}
+
+/* Touch target minimum 44x44px for accessibility */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Digital Rain - Aura Gradient System */
+.aura-bg {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+/* Digital Rain - Adaptive Aura Gradient System (Light & Dark) */
+.aura-bg {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+/* Light mode defaults: multiply for fresh watercolor atmospheric mesh on light background */
+.aura-layer-1 {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(16, 185, 129, 0.5) 0%, transparent 45%);
+  mix-blend-mode: multiply;
+  opacity: 0.38;
+  filter: blur(160px);
+  transform: translateZ(0);
+  will-change: transform;
+  pointer-events: none;
+  transition: opacity 300ms ease, mix-blend-mode 300ms ease;
+}
+
+.aura-layer-2 {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 70% 35%, rgba(20, 184, 166, 0.45) 0%, transparent 40%);
+  mix-blend-mode: multiply;
+  opacity: 0.35;
+  filter: blur(180px);
+  transform: translateZ(0);
+  will-change: transform;
+  pointer-events: none;
+  transition: opacity 300ms ease, mix-blend-mode 300ms ease;
+}
+
+.aura-layer-3 {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 45% 70%, rgba(6, 182, 212, 0.4) 0%, transparent 50%);
+  mix-blend-mode: multiply;
+  opacity: 0.32;
+  filter: blur(150px);
+  transform: translateZ(0);
+  will-change: transform;
+  pointer-events: none;
+  transition: opacity 300ms ease, mix-blend-mode 300ms ease;
+}
+
+.aura-layer-4 {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 80%, rgba(132, 204, 22, 0.35) 0%, transparent 35%);
+  mix-blend-mode: multiply;
+  opacity: 0.25;
+  filter: blur(120px);
+  transform: translateZ(0);
+  will-change: transform;
+  pointer-events: none;
+  transition: opacity 300ms ease, mix-blend-mode 300ms ease;
+}
+
+/* Dark mode overrides: screen & overlay on dark backdrop */
+.dark .aura-layer-1 {
+  background: radial-gradient(circle at 30% 20%, rgba(34, 197, 94, 0.7) 0%, transparent 45%);
+  mix-blend-mode: screen;
+  opacity: 1;
+  filter: blur(188px);
+}
+
+.dark .aura-layer-2 {
+  background: radial-gradient(circle at 70% 35%, rgba(16, 185, 129, 0.5) 0%, transparent 40%);
+  mix-blend-mode: screen;
+  opacity: 1;
+  filter: blur(200px);
+}
+
+.dark .aura-layer-3 {
+  background: radial-gradient(circle at 45% 70%, rgba(6, 182, 212, 0.4) 0%, transparent 50%);
+  mix-blend-mode: screen;
+  opacity: 1;
+  filter: blur(175px);
+}
+
+.dark .aura-layer-4 {
+  background: radial-gradient(circle at 80% 80%, rgba(132, 204, 22, 0.2) 0%, transparent 30%);
+  mix-blend-mode: overlay;
+  opacity: 1;
+  filter: blur(138px);
+}
+
+@media (min-width: 640px) {
+  .aura-layer-1 { filter: blur(220px); }
+  .aura-layer-2 { filter: blur(220px); }
+  .aura-layer-3 { filter: blur(210px); }
+  .aura-layer-4 { filter: blur(160px); }
+  .dark .aura-layer-1 { filter: blur(260px); }
+  .dark .aura-layer-2 { filter: blur(260px); }
+  .dark .aura-layer-3 { filter: blur(252px); }
+  .dark .aura-layer-4 { filter: blur(198px); }
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .apple-pressable:active {
+    transform: none;
+  }
+}
