@@ -4,7 +4,7 @@ import { BackgroundGlow } from "@/components/shared/BackgroundGlow";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Pelunas — Perencana Pelunasan Utang Realistis",
+  title: "Pelunas: Perencana Pelunasan Utang Realistis",
   description:
     "Hitung urutan prioritas pelunasan paylater, kartu kredit, dan pinjol dengan strategi Snowball dan Avalanche yang transparan dan bebas penghakiman.",
 };
@@ -42,9 +42,9 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen text-foreground flex flex-col font-sans relative selection:bg-pelunas-500/20 selection:text-pelunas-300">
+      <body className="min-h-[100dvh] text-foreground flex flex-col font-sans relative selection:bg-pelunas-500/20 selection:text-pelunas-300">
         <BackgroundGlow />
-        <div className="relative z-[1] flex flex-col min-h-screen">
+        <div className="relative z-[1] flex flex-col min-h-[100dvh]">
           <Header />
           <main className="flex-1 w-full max-w-4xl mx-auto px-4 py-6 sm:py-8">
             {children}

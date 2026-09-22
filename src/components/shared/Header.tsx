@@ -1,22 +1,24 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Sparkles, ShieldCheck, Plus, Sun, Moon } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Sparkles, Plus, Sun, Moon, ArrowRight, ArrowLeft } from "lucide-react";
 import { useDebtStore } from "@/lib/store/useDebtStore";
 import { motion, AnimatePresence } from "framer-motion";
 
 /**
- * Floating Glass Navigation Bar
- * Features:
- * - Floating rounded-full pill bar (inspired by thebudgeting.app)
- * - Light / Dark Mode Toggle with smooth spring rotation
- * - Live offline status badge
- * - Tactile quick add button
+ * Responsive Floating Navigation Bar
+ * Adapts dynamically between:
+ * - Landing Page (`/`): Marketing links, value props, and "Buka Aplikasi" CTA.
+ * - Application Page (`/app`): Workspace controls, active debt counter, theme toggle, and "+ Tambah".
  */
 export function Header(): JSX.Element {
+  const pathname = usePathname();
+  const isAppPage = pathname === "/app";
   const { openAddForm, debts, theme, toggleTheme } = useDebtStore();
 
-  // Ensure DOM class is synchronized on client mount
+  // Synchronize dark class on <html>
   useEffect(() => {
     if (typeof document !== "undefined") {
       if (theme === "dark") {
@@ -35,43 +37,62 @@ export function Header(): JSX.Element {
         aria-label="Navigasi Utama"
         className="max-w-4xl mx-auto apple-glass rounded-full px-4 sm:px-6 h-14 sm:h-15 flex items-center justify-between gap-3 shadow-2xl backdrop-blur-2xl border border-white/[0.09] pointer-events-auto transition-all"
       >
-        {/* Brand Logo & Live Status */}
+        {/* Brand Logo */}
         <div className="flex items-center gap-3">
-          <motion.div
-            whileHover={{ rotate: 15, scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className="relative w-8 h-8 rounded-full bg-pelunas-500/20 border border-pelunas-500/40 flex items-center justify-center text-pelunas-400 shadow-inner"
+          <Link
+            href="/"
+            aria-label="Kembali ke Beranda Pelunas"
+            className="flex items-center gap-2.5 group"
           >
-            <Sparkles className="w-4 h-4 text-pelunas-400" aria-hidden="true" />
-            <div className="absolute inset-0 rounded-full bg-pelunas-400/20 blur-sm pointer-events-none" />
-          </motion.div>
+            <motion.div
+              whileHover={{ rotate: 15, scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className="relative w-8 h-8 rounded-full bg-pelunas-500/20 border border-pelunas-500/40 flex items-center justify-center text-pelunas-400 shadow-inner"
+            >
+              <Sparkles className="w-4 h-4 text-pelunas-400" aria-hidden="true" />
+              <div className="absolute inset-0 rounded-full bg-pelunas-400/20 blur-sm pointer-events-none" />
+            </motion.div>
 
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-base sm:text-lg tracking-tight text-foreground font-sans">
+            <span className="font-extrabold text-base sm:text-lg tracking-tight text-foreground font-sans group-hover:text-pelunas-300 transition-colors">
               Pelunas
             </span>
-            <div className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-subtle border border-surface-border text-[11px] text-muted-foreground font-medium">
-              <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
-              </span>
-              <span>100% Offline • Bebas Iklan</span>
+          </Link>
+
+          {!isAppPage && (
+            <div className="hidden lg:flex items-center gap-4 ml-4 text-xs text-muted-foreground font-medium">
+              <a href="#masalah" className="hover:text-foreground transition-colors">
+                Solusi
+              </a>
+              <a href="#cara-kerja" className="hover:text-foreground transition-colors">
+                Cara Kerja
+              </a>
+              <a href="#pengingat" className="hover:text-foreground transition-colors">
+                Pengingat
+              </a>
+              <a href="#faq" className="hover:text-foreground transition-colors">
+                FAQ
+              </a>
             </div>
-          </div>
+          )}
+
+          {isAppPage && (
+            <Link
+              href="/"
+              className="hidden sm:inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2.5 py-1 rounded-full bg-surface-subtle border border-surface-border transition-colors font-medium ml-1"
+            >
+              <ArrowLeft className="w-3 h-3" aria-hidden="true" />
+              <span>Beranda</span>
+            </Link>
+          )}
         </div>
 
-        {/* Right Action Items: Active count + Theme Toggle + Quick Add */}
+        {/* Right Action Items */}
         <div className="flex items-center gap-2 sm:gap-2.5">
-          {debts.length > 0 && (
+          {isAppPage && debts.length > 0 && (
             <span className="hidden xs:inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground px-3 py-1 rounded-full bg-surface-subtle border border-surface-border">
               <span>{debts.length} Cicilan</span>
             </span>
           )}
-
-          <div className="hidden md:flex items-center gap-1 text-[11px] text-muted-foreground px-2.5 py-1 rounded-full bg-surface-subtle border border-surface-border">
-            <ShieldCheck className="w-3.5 h-3.5 text-pelunas-400" aria-hidden="true" />
-            <span>Privat</span>
-          </div>
 
           {/* Smooth Light / Dark Mode Toggle Button */}
           <button
@@ -99,15 +120,25 @@ export function Header(): JSX.Element {
             </AnimatePresence>
           </button>
 
-          {/* Add Button */}
-          <button
-            type="button"
-            onClick={openAddForm}
-            className="apple-pressable inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-full bg-pelunas-500 hover:bg-pelunas-400 text-pelunas-950 text-xs font-bold shadow-lg shadow-pelunas-500/25 transition-all touch-target"
-          >
-            <Plus className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>Tambah</span>
-          </button>
+          {/* Contextual Action Button */}
+          {isAppPage ? (
+            <button
+              type="button"
+              onClick={openAddForm}
+              className="apple-pressable inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-full bg-pelunas-500 hover:bg-pelunas-400 text-pelunas-950 text-xs font-bold shadow-lg shadow-pelunas-500/25 transition-all touch-target"
+            >
+              <Plus className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Tambah</span>
+            </button>
+          ) : (
+            <Link
+              href="/app"
+              className="apple-pressable inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-full bg-pelunas-500 hover:bg-pelunas-400 text-pelunas-950 text-xs font-bold shadow-lg shadow-pelunas-500/25 transition-all touch-target"
+            >
+              <span>Buka Aplikasi</span>
+              <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+            </Link>
+          )}
         </div>
       </nav>
     </header>

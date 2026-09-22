@@ -10,12 +10,8 @@ import { AlertCircle, Target, ShieldCheck, Sparkles, ArrowUpRight } from "lucide
  */
 export function ProblemStatement(): JSX.Element {
   return (
-    <section className="space-y-5 pt-6" aria-labelledby="problem-heading">
-      <div className="space-y-1.5 text-left">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pelunas-500/10 border border-pelunas-500/25 text-pelunas-300 text-xs font-semibold">
-          <Sparkles className="w-3.5 h-3.5 text-pelunas-400" aria-hidden="true" />
-          <span>Solusi Nyata Tanpa Stres</span>
-        </div>
+    <section id="masalah" className="space-y-5 pt-6 scroll-mt-24" aria-labelledby="problem-heading">
+      <div className="space-y-1 text-left">
         <h2
           id="problem-heading"
           className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground heading-display"

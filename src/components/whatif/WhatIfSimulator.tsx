@@ -22,9 +22,6 @@ export function WhatIfSimulator(): JSX.Element {
             >
               Simulasi Akselerasi (What-If)
             </h2>
-            <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-pelunas-500/15 text-pelunas-300 border border-pelunas-500/30">
-              Interaktif
-            </span>
           </div>
           <p className="text-xs sm:text-sm text-muted-foreground">
             Uji dampak jika kamu mengalokasikan sedikit dana tambahan per bulan

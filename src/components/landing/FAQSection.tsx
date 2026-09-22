@@ -11,6 +11,11 @@ interface FAQItem {
 
 const FAQS: FAQItem[] = [
   {
+    question: "Pengingat jatuh tempo dikirim ke mana? Apakah ke email atau WhatsApp?",
+    answer:
+      "Tidak ke email maupun WhatsApp! Pelunas 100% offline-first dan zero-knowledge. Kami tidak pernah meminta email atau nomor HP Anda. Pengingat jatuh tempo ditampilkan secara in-app di dalam aplikasi saat Anda membukanya, dan Anda bisa mengekspor jadwal (.ics) langsung ke aplikasi kalender bawaan HP (Google Calendar atau Apple Calendar) dengan satu klik agar alarm ponsel Anda otomatis berbunyi.",
+  },
+  {
     question: "Kenapa data utang saya tidak disimpan di server / cloud?",
     answer:
       "Privasi finansial adalah prioritas mutlak. Pelunas dirancang bekerja 100% di browser kamu (menggunakan teknologi localStorage). Kami tidak meminta KTP, nama rekening, atau email. Data tidak pernah meninggalkan ponsel atau komputermu.",
@@ -40,14 +45,8 @@ export function FAQSection(): JSX.Element {
   };
 
   return (
-    <section className="space-y-4 pt-4" aria-labelledby="faq-heading">
+    <section id="faq" className="space-y-4 pt-4 scroll-mt-24" aria-labelledby="faq-heading">
       <div className="space-y-1">
-        <div className="flex items-center gap-2">
-          <HelpCircle className="w-4 h-4 text-pelunas-400" aria-hidden="true" />
-          <span className="text-xs font-bold uppercase tracking-wider text-pelunas-400">
-            Tanya Jawab Finansial
-          </span>
-        </div>
         <h2
           id="faq-heading"
           className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground"
