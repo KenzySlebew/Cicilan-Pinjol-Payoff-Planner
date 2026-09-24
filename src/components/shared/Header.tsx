@@ -35,7 +35,7 @@ export function Header(): JSX.Element {
     <header className="sticky top-3.5 z-40 w-full px-3.5 sm:px-4 pointer-events-none">
       <nav
         aria-label="Navigasi Utama"
-        className="max-w-4xl mx-auto apple-glass rounded-full px-4 sm:px-6 h-14 sm:h-15 flex items-center justify-between gap-3 shadow-2xl backdrop-blur-2xl border border-white/[0.09] pointer-events-auto transition-all"
+        className="max-w-6xl xl:max-w-7xl mx-auto apple-glass rounded-full px-4 sm:px-6 h-14 sm:h-15 flex items-center justify-between gap-3 shadow-2xl backdrop-blur-2xl border border-white/[0.09] pointer-events-auto transition-all"
       >
         {/* Brand Logo */}
         <div className="flex items-center gap-3">

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useDebtStore } from "@/lib/store/useDebtStore";
 import { formatRupiah } from "@/lib/utils/formatRupiah";
 import { calculatePayoffStrategy } from "@/lib/calculations/payoffEngine";
@@ -17,6 +17,8 @@ import { MilestoneConfetti } from "@/components/celebration/MilestoneConfetti";
 import { WhatIfSimulator } from "@/components/whatif/WhatIfSimulator";
 import { DueDateReminderToast } from "@/components/reminder/DueDateReminderToast";
 import { DueDateReminderCenter } from "@/components/reminder/DueDateReminderCenter";
+import { UpcomingDueWidget } from "@/components/reminder/UpcomingDueWidget";
+import { QuickDebtWidget } from "@/components/debt/QuickDebtWidget";
 import {
   TrendingDown,
   CreditCard,
@@ -24,8 +26,13 @@ import {
   Plus,
   ArrowLeft,
   ShieldCheck,
+  BarChart3,
+  Calendar,
+  Layers,
   Sparkles,
 } from "lucide-react";
+
+type DashboardTab = "cockpit" | "debts" | "schedule";
 
 export default function AppWorkspacePage(): JSX.Element {
   const {
@@ -36,6 +43,8 @@ export default function AppWorkspacePage(): JSX.Element {
     setHasHydrated,
     openAddForm,
   } = useDebtStore();
+
+  const [activeTab, setActiveTab] = useState<DashboardTab>("cockpit");
 
   useEffect(() => {
     setHasHydrated(true);
@@ -60,8 +69,8 @@ export default function AppWorkspacePage(): JSX.Element {
   const totalMinPayment = debts.reduce((sum, d) => sum + d.minimumPayment, 0);
 
   return (
-    <div className="space-y-7 sm:space-y-9 animate-in fade-in duration-300 pb-20 sm:pb-12">
-      {/* Top Breadcrumb & Contextual Navigation */}
+    <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300 pb-20 sm:pb-12">
+      {/* Top Breadcrumb & Status Navigation */}
       <nav
         aria-label="Navigasi Aplikasi"
         className="flex items-center justify-between gap-3 pt-1 text-xs"
@@ -82,26 +91,36 @@ export default function AppWorkspacePage(): JSX.Element {
         </div>
       </nav>
 
-      {/* Page Title & Status Header */}
+      {/* Page Title & Dashboard Summary */}
       <section className="space-y-1 text-left">
-        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground heading-display">
-          Ruang Kerja Pelunasan
-        </h1>
+        <div className="flex items-center justify-between gap-4">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground heading-display">
+            Dashboard Pelunasan Utang
+          </h1>
+          <button
+            type="button"
+            onClick={openAddForm}
+            className="apple-pressable inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl bg-pelunas-500 text-pelunas-950 font-bold text-xs hover:bg-pelunas-400 transition-colors shadow-sm touch-target"
+          >
+            <Plus className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>Tambah Cicilan</span>
+          </button>
+        </div>
         <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl leading-relaxed">
-          Simulasikan percepatan cicilanmu dengan data riil, pilih strategi paling hemat, dan pantau jatuh tempo tanpa denda.
+          Pusat kendali pelunasan: pantau pokok utang, atur strategi Snowball & Avalanche, simulasikan percepatan, dan cek jadwal jatuh tempo.
         </p>
       </section>
 
-      {/* 3 Interactive Metric Cards */}
+      {/* 3 Interactive KPI Metric Cards (Always in sight) */}
       <section
-        className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5"
+        className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4.5"
         aria-label="Ringkasan Metrik Finansial"
       >
         {/* Total Utang Pokok */}
         <motion.div
           whileHover={{ y: -3, scale: 1.01 }}
           transition={{ type: "spring", damping: 25, stiffness: 350 }}
-          className="apple-card p-5 sm:p-6 rounded-3xl relative overflow-hidden group hover:border-pelunas-500/40 transition-colors shadow-lg"
+          className="apple-card p-5 rounded-3xl relative overflow-hidden group hover:border-pelunas-500/40 transition-colors shadow-lg"
         >
           <div className="flex items-center justify-between text-xs sm:text-sm text-muted-foreground font-medium mb-1.5">
             <span>Total Pokok Utang</span>
@@ -121,7 +140,7 @@ export default function AppWorkspacePage(): JSX.Element {
         <motion.div
           whileHover={{ y: -3, scale: 1.01 }}
           transition={{ type: "spring", damping: 25, stiffness: 350 }}
-          className="apple-card p-5 sm:p-6 rounded-3xl relative overflow-hidden group hover:border-sky-500/40 transition-colors shadow-lg"
+          className="apple-card p-5 rounded-3xl relative overflow-hidden group hover:border-sky-500/40 transition-colors shadow-lg"
         >
           <div className="flex items-center justify-between text-xs sm:text-sm text-muted-foreground font-medium mb-1.5">
             <span>Beban Cicilan Bulanan</span>
@@ -143,7 +162,7 @@ export default function AppWorkspacePage(): JSX.Element {
         <motion.div
           whileHover={{ y: -3, scale: 1.01 }}
           transition={{ type: "spring", damping: 25, stiffness: 350 }}
-          className="apple-card p-5 sm:p-6 rounded-3xl relative overflow-hidden group hover:border-emerald-500/40 transition-colors shadow-lg"
+          className="apple-card p-5 rounded-3xl relative overflow-hidden group hover:border-emerald-500/40 transition-colors shadow-lg"
         >
           <div className="flex items-center justify-between text-xs sm:text-sm text-muted-foreground font-medium mb-1.5">
             <span>Estimasi Bebas Utang</span>
@@ -162,26 +181,126 @@ export default function AppWorkspacePage(): JSX.Element {
         </motion.div>
       </section>
 
-      {/* In-App Due Date Reminder Center (Menjawab Mentor: Pengingat 100% In-App + Ekspor Kalender HP) */}
-      <DueDateReminderCenter />
+      {/* Segmented Dashboard Tabs Navigation */}
+      <section aria-label="Menu Tampilan Dashboard">
+        <div className="flex items-center justify-center sm:justify-start">
+          <div
+            role="tablist"
+            className="p-1 rounded-2xl bg-surface-subtle border border-surface-border inline-flex items-center gap-1 shadow-inner max-w-full overflow-x-auto no-scrollbar"
+          >
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeTab === "cockpit"}
+              onClick={() => setActiveTab("cockpit")}
+              className={`apple-pressable relative px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 touch-target shrink-0 ${
+                activeTab === "cockpit"
+                  ? "bg-pelunas-500 text-pelunas-950 shadow-md"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <BarChart3 className="w-4 h-4" aria-hidden="true" />
+              <span>Cockpit & Simulasi</span>
+            </button>
 
-      {/* What-If Acceleration Simulator */}
-      <WhatIfSimulator />
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeTab === "debts"}
+              onClick={() => setActiveTab("debts")}
+              className={`apple-pressable relative px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 touch-target shrink-0 ${
+                activeTab === "debts"
+                  ? "bg-pelunas-500 text-pelunas-950 shadow-md"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <CreditCard className="w-4 h-4" aria-hidden="true" />
+              <span>Kelola Cicilan</span>
+              <span
+                className={`px-2 py-0.2 rounded-full text-[10px] font-bold ${
+                  activeTab === "debts"
+                    ? "bg-pelunas-950/20 text-pelunas-950"
+                    : "bg-surface-subtle text-foreground border border-surface-border"
+                }`}
+              >
+                {debts.length}
+              </span>
+            </button>
 
-      {/* Visual Amortization Area Chart */}
-      <PayoffTimeline />
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeTab === "schedule"}
+              onClick={() => setActiveTab("schedule")}
+              className={`apple-pressable relative px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 touch-target shrink-0 ${
+                activeTab === "schedule"
+                  ? "bg-pelunas-500 text-pelunas-950 shadow-md"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Calendar className="w-4 h-4" aria-hidden="true" />
+              <span>Jadwal Jatuh Tempo</span>
+            </button>
+          </div>
+        </div>
+      </section>
 
-      {/* Strategy Selector (Snowball vs Avalanche) */}
-      <StrategySelector />
+      {/* Tab Panels */}
+      <main>
+        {/* TAB 1: Cockpit & Simulasi (2-Column Dashboard on Desktop) */}
+        {activeTab === "cockpit" && (
+          <div className="space-y-6 animate-in fade-in duration-200">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              {/* Left Column: What-If + Payoff Curve Chart */}
+              <div className="lg:col-span-7 xl:col-span-8 space-y-6">
+                {/* What-If Acceleration Simulator */}
+                <WhatIfSimulator />
 
-      {/* Strategy Comparison Cards */}
-      <StrategyComparison />
+                {/* Visual Amortization Area Chart (Immediately responds to slider) */}
+                <PayoffTimeline />
 
-      {/* Step-by-Step Priority Order Queue */}
-      <PayoffOrderList />
+                {/* Strategy Selector (Snowball vs Avalanche) */}
+                <StrategySelector />
 
-      {/* Main List Section: Daftar Utang with Filter, Sort, Progress Ring */}
-      <DebtList />
+                {/* Strategy Comparison Cards */}
+                <StrategyComparison />
+              </div>
+
+              {/* Right Column: Due Date Widget + Quick Debt Access (Sticky on desktop) */}
+              <div className="lg:col-span-5 xl:col-span-4 space-y-6 lg:sticky lg:top-20">
+                {/* Upcoming Due Date Spotlight Widget */}
+                <UpcomingDueWidget
+                  onViewAllClick={() => setActiveTab("schedule")}
+                />
+
+                {/* Quick Debt Access Widget */}
+                <QuickDebtWidget
+                  onManageClick={() => setActiveTab("debts")}
+                />
+              </div>
+            </div>
+
+            {/* Full-Width Section: Step-by-Step Priority Execution Queue */}
+            <div>
+              <PayoffOrderList />
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: Kelola Cicilan (Dedicated Debt Management Workspace) */}
+        {activeTab === "debts" && (
+          <div className="space-y-6 animate-in fade-in duration-200">
+            <DebtList />
+          </div>
+        )}
+
+        {/* TAB 3: Jadwal Jatuh Tempo (Dedicated Calendar & Reminder Center) */}
+        {activeTab === "schedule" && (
+          <div className="space-y-6 animate-in fade-in duration-200">
+            <DueDateReminderCenter />
+          </div>
+        )}
+      </main>
 
       {/* Floating Mobile Quick Add Button */}
       <div className="fixed bottom-5 right-5 sm:hidden z-30">

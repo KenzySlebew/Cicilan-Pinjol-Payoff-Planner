@@ -46,7 +46,7 @@ export default function RootLayout({
         <BackgroundGlow />
         <div className="relative z-[1] flex flex-col min-h-[100dvh]">
           <Header />
-          <main className="flex-1 w-full max-w-4xl mx-auto px-4 py-6 sm:py-8">
+          <main className="flex-1 w-full max-w-6xl xl:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
             {children}
           </main>
         </div>
